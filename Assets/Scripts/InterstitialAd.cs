@@ -17,7 +17,7 @@ public class InterstitialAd : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsSho
     private void Awake()
     {
         currentDeaths = PlayerPrefs.GetInt(CURRENT_ADS);
-        Player.OnDeath += HandleDeath;
+        RewardedAd.OnLeaveContinueScreen += HandleDeath;
         // Get the Ad Unit ID for the current platform:
         _adUnitId = (Application.platform == RuntimePlatform.IPhonePlayer)
             ? _iOsAdUnitId
@@ -26,7 +26,7 @@ public class InterstitialAd : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsSho
 
     private void OnDestroy()
     {
-        Player.OnDeath -= HandleDeath;        
+        RewardedAd.OnLeaveContinueScreen -= HandleDeath;        
     }
 
     private void HandleDeath()

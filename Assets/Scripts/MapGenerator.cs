@@ -104,14 +104,14 @@ public class MapGenerator : MonoBehaviour
     {
         GameManager.OnStartGame += HandleStartGame;
         GameManager.OnGenerateMap += HandleStartGame;
-        Player.OnDeath += HandlePlayerDeath;
+        RewardedAd.OnLeaveContinueScreen += HandlePlayerDeath;
     }
 
     private void OnDestroy()
     {
         GameManager.OnStartGame -= HandleStartGame;
         GameManager.OnGenerateMap -= HandleStartGame;
-        Player.OnDeath -= HandlePlayerDeath;
+        RewardedAd.OnLeaveContinueScreen -= HandlePlayerDeath;
     }
 
     private void HandleStartGame()

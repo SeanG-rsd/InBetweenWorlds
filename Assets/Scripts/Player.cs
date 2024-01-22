@@ -76,6 +76,7 @@ public class Player : MonoBehaviour
         Cargo.OnGameOver += Death;
         ShopManager.OnUpdatePlayerAir += HandleAirUpgrade;
         ShopManager.OnUpdatePlayerSpeed += HandleSpeedUpgrade;
+        RewardedAd.OnRevivePlayer += HandleRevive;
     }
 
     private void OnDestroy()
@@ -85,6 +86,7 @@ public class Player : MonoBehaviour
         Cargo.OnGameOver -= Death;
         ShopManager.OnUpdatePlayerAir -= HandleAirUpgrade;
         ShopManager.OnUpdatePlayerSpeed -= HandleSpeedUpgrade;
+        RewardedAd.OnRevivePlayer -= HandleRevive;
     }
 
 
@@ -249,6 +251,13 @@ public class Player : MonoBehaviour
     {
         gameHasStarted = true;
         transform.position = startPos;
+    }
+
+    private void HandleRevive()
+    {
+        gameHasStarted = true;
+        isPaused = false;
+        currentAir = maxAir;
     }
 
     private void HandlePause(bool pauseState)

@@ -18,6 +18,8 @@ public class DeathWall : MonoBehaviour
     public int currentRoomNumber;
 
     private bool isPaused = false;
+
+    [SerializeField] private int playerReviveBuffer;
     // Update is called once per frame
 
     private void Awake()
@@ -25,6 +27,8 @@ public class DeathWall : MonoBehaviour
         currentRoomNumber = 0;
         Player.OnCompletedRoom += HandleRoomCompletion;
         GameManager.OnPause += HandlePause;
+        RewardedAd.OnRevivePlayer += HandleRevivePlayer;
+        Player.OnDeath += HandleDeath;
         max = maxMinHeight.y;
     }
 
@@ -32,6 +36,8 @@ public class DeathWall : MonoBehaviour
     {
         Player.OnCompletedRoom -= HandleRoomCompletion;
         GameManager.OnPause -= HandlePause;
+        RewardedAd.OnRevivePlayer -= HandleRevivePlayer;
+        Player.OnDeath -= HandleDeath;
     }
 
     
@@ -60,6 +66,17 @@ public class DeathWall : MonoBehaviour
     {
         currentRoomNumber++;
         speed = Mathf.Log(currentRoomNumber + 1, 4);
+    }
+
+    private void HandleRevivePlayer()
+    {
+        transform.Translate(-playerReviveBuffer, 0, 0);
+        isPaused = false;
+    }
+
+    private void HandleDeath()
+    {
+        isPaused = true;
     }
 
     private void HandlePause(bool pauseState)

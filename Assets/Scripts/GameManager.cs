@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
         isPlaying = false;
         mainMenu.SetActive(true);
         gameOverMenu.SetActive(false);
-        Player.OnDeath += HandlePlayerDeath;
+        RewardedAd.OnLeaveContinueScreen += HandlePlayerDeath;
         cargoStartPos = cargo.transform.position;
         playerComp = player.GetComponent<Player>();
         
@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        Player.OnDeath -= HandlePlayerDeath;
+        RewardedAd.OnLeaveContinueScreen -= HandlePlayerDeath;
     }
 
     private void Update()
