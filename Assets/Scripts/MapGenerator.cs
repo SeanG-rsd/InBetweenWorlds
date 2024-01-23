@@ -293,6 +293,7 @@ public class MapGenerator : MonoBehaviour
             keyPos = p.GetRandomBlock();
             GameObject key = Instantiate(keyPrefab, new Vector3(keyPos.x + offset + 0.5f, (keyPos.y + 1) * -1 - 0.5f, 0), Quaternion.identity);
             key.transform.SetParent(objectParent);
+            possibleCoinPositions.Remove(keyPos);
         }
 
         Vector3Int swapperPos = keyPos;
@@ -301,9 +302,9 @@ public class MapGenerator : MonoBehaviour
         {
             Platform swapperPlatform = platformObjects[Random.Range(0, platformObjects.Count)];
             swapperPos = swapperPlatform.GetRandomBlock();
-            possibleCoinPositions.Remove(swapperPos);
         }
 
+        possibleCoinPositions.Remove(swapperPos);
         GameObject swapper = Instantiate(swapperPrefab, new Vector3(swapperPos.x + offset + 0.5f, world == World.Earth ? swapperPos.y + 1.5f : (swapperPos.y + 1) * -1 - 0.5f, 0), Quaternion.identity);
         if (world == World.Moon)
         {

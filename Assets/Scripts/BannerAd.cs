@@ -11,6 +11,24 @@ public class BannerAd : MonoBehaviour
     [SerializeField] string _iOSAdUnitId = "Banner_iOS";
     string _adUnitId = null; // This will remain null for unsupported platforms.
 
+    bool hasBeenLoaded;
+
+    private void Awake()
+    {
+        GameManager.OnPause += ToggleBanner;
+        GameManager.OnStartGame += HandleAction;
+        RewardedAd.OnRevivePlayer += HandleAction;
+        Player.OnDeath += HandlePlayerDeath;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnPause -= ToggleBanner;
+        RewardedAd.OnRevivePlayer -= HandleAction;
+        GameManager.OnStartGame += HandleAction;
+        Player.OnDeath -= HandlePlayerDeath;
+    }
+
     void Start()
     {
         // Get the Ad Unit ID for the current platform:
@@ -51,8 +69,7 @@ public class BannerAd : MonoBehaviour
     // Implement code to execute when the loadCallback event triggers:
     void OnBannerLoaded()
     {
-        ShowBannerAd();
-        //Debug.Log("Banner loaded");
+        Debug.Log("Banner loaded");
 
         // Configure the Show Banner button to call the ShowBannerAd() method when clicked:
         //_showBannerButton.onClick.AddListener(ShowBannerAd);
@@ -71,8 +88,23 @@ public class BannerAd : MonoBehaviour
         // Optionally execute additional code, such as attempting to load another ad.
     }
 
+    private void HandleAction()
+    {
+        ShowBannerAd(false);
+    }
+
+    private void HandlePlayerDeath()
+    {
+        ShowBannerAd(true);
+    }
+
+    private void ToggleBanner(bool isPaused)
+    {
+        ShowBannerAd(isPaused);
+    }
+
     // Implement a method to call when the Show Banner button is clicked:
-    void ShowBannerAd()
+    void ShowBannerAd(bool isPaused)
     {
         // Set up options to notify the SDK of show events:
         BannerOptions options = new BannerOptions
@@ -83,16 +115,17 @@ public class BannerAd : MonoBehaviour
         };
 
         // Show the loaded Banner Ad Unit:
-        Advertisement.Banner.Show(_adUnitId, options);
+        if (isPaused)
+        {
+            Advertisement.Banner.Hide();
+        }
+        else
+        {
+            Debug.Log("Banner loaded");
+            Advertisement.Banner.Show(_adUnitId, options);
+        }
     }
+
     void OnBannerShown() { }
     void OnBannerHidden() { }
-
-    void OnDestroy()
-    {
-        // Clean up the listeners:
-        //_loadBannerButton.onClick.RemoveAllListeners();
-        //_showBannerButton.onClick.RemoveAllListeners();
-        //_hideBannerButton.onClick.RemoveAllListeners();
-    }
 }

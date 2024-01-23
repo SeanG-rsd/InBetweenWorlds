@@ -103,7 +103,14 @@ public class RewardedAd : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLis
         // Disable the button:
         // Then show the ad:
         currentRunCount++;
-        playAdButton.interactable = false;
+        if (currentRunCount < maxAdsPerRun)
+        {
+            playAdButton.interactable = true;
+        }
+        else
+        {
+            playAdButton.interactable = false;
+        }
 
         Advertisement.Show(_adUnitId, this);
     }

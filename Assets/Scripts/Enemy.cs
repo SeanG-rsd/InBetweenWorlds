@@ -19,13 +19,19 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
-        map = FindObjectOfType<Tilemap>();
+        map = FindFirstObjectByType<Tilemap>();
         GameManager.OnPause += HandlePause;
+        RewardedAd.OnRevivePlayer += HandleRevivePlayer;
+        Player.OnDeath += HandleDeath;
+        GameManager.OnStartGame += HandleStartGame;
     }
 
     private void OnDestroy()
     {
         GameManager.OnPause -= HandlePause;
+        RewardedAd.OnRevivePlayer -= HandleRevivePlayer;
+        Player.OnDeath -= HandleDeath;
+        GameManager.OnStartGame -= HandleStartGame;
     }
 
     private void Update()
@@ -49,6 +55,21 @@ public class Enemy : MonoBehaviour
     private void HandlePause(bool pauseState)
     {
         isPaused = pauseState;
+    }
+
+    private void HandleRevivePlayer()
+    {
+        isPaused = false;
+    }
+
+    private void HandleDeath()
+    {
+        isPaused = true;
+    }
+
+    private void HandleStartGame()
+    {
+        isPaused = false;
     }
 
     private bool IsPlatformBelowFront()

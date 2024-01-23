@@ -29,6 +29,7 @@ public class DeathWall : MonoBehaviour
         GameManager.OnPause += HandlePause;
         RewardedAd.OnRevivePlayer += HandleRevivePlayer;
         Player.OnDeath += HandleDeath;
+        GameManager.OnStartGame += HandleStartGame;
         max = maxMinHeight.y;
     }
 
@@ -38,6 +39,7 @@ public class DeathWall : MonoBehaviour
         GameManager.OnPause -= HandlePause;
         RewardedAd.OnRevivePlayer -= HandleRevivePlayer;
         Player.OnDeath -= HandleDeath;
+        GameManager.OnStartGame -= HandleStartGame;
     }
 
     
@@ -77,6 +79,11 @@ public class DeathWall : MonoBehaviour
     private void HandleDeath()
     {
         isPaused = true;
+    }
+
+    private void HandleStartGame()
+    {
+        isPaused = false;
     }
 
     private void HandlePause(bool pauseState)

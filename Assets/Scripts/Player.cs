@@ -73,20 +73,22 @@ public class Player : MonoBehaviour
     {
         GameManager.OnStartGame += HandleStartGame;
         GameManager.OnPause += HandlePause;
-        Cargo.OnGameOver += Death;
+        Cargo.OnGameOver += HandleCargoLoss;
         ShopManager.OnUpdatePlayerAir += HandleAirUpgrade;
         ShopManager.OnUpdatePlayerSpeed += HandleSpeedUpgrade;
         RewardedAd.OnRevivePlayer += HandleRevive;
+        RewardedAd.OnLeaveContinueScreen += Death;
     }
 
     private void OnDestroy()
     {
         GameManager.OnStartGame -= HandleStartGame;
         GameManager.OnPause -= HandlePause;
-        Cargo.OnGameOver -= Death;
+        Cargo.OnGameOver -= HandleCargoLoss;
         ShopManager.OnUpdatePlayerAir -= HandleAirUpgrade;
         ShopManager.OnUpdatePlayerSpeed -= HandleSpeedUpgrade;
         RewardedAd.OnRevivePlayer -= HandleRevive;
+        RewardedAd.OnLeaveContinueScreen -= Death;
     }
 
 
@@ -172,9 +174,9 @@ public class Player : MonoBehaviour
         float value = currentAir / maxAir;
         airMask.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, originalSize * value);
 
-        if (currentAir == 0)
+        if (currentAir <= 0)
         {
-            Death();
+            OnDeath?.Invoke();
         }
     }
 
@@ -275,6 +277,11 @@ public class Player : MonoBehaviour
         speed = baseSpeed * speedUpgrade;
     }
 
+    private void HandleCargoLoss()
+    {
+        OnDeath?.Invoke();
+    }
+
     private void Death()
     {
         Debug.Log("death");
@@ -291,7 +298,6 @@ public class Player : MonoBehaviour
             currentAir = maxAir;
             transform.position = startPos;
             SoundManager.Instance.PlaySound(deathSound);
-            OnDeath?.Invoke();
             gameHasStarted = false;
             itemInHand = null;
             itemTouching = null;
@@ -376,7 +382,7 @@ public class Player : MonoBehaviour
         }
         else if (collision.gameObject.tag == "DeathWall")
         {
-            Death();
+            OnDeath?.Invoke();
         }
         else if (collision.gameObject.tag == "Enemy")
         {
