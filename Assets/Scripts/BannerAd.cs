@@ -11,6 +11,8 @@ public class BannerAd : MonoBehaviour
     [SerializeField] string _iOSAdUnitId = "Banner_iOS";
     string _adUnitId = null; // This will remain null for unsupported platforms.
 
+
+    private bool removeAds = false;
     bool hasBeenLoaded;
 
     private void Awake()
@@ -19,6 +21,7 @@ public class BannerAd : MonoBehaviour
         GameManager.OnStartGame += HandleAction;
         RewardedAd.OnRevivePlayer += HandleAction;
         Player.OnDeath += HandlePlayerDeath;
+        InAppPurchaseManager.OnRemoveAds += HandleRemoveAds;
     }
 
     private void OnDestroy()
@@ -27,6 +30,7 @@ public class BannerAd : MonoBehaviour
         RewardedAd.OnRevivePlayer -= HandleAction;
         GameManager.OnStartGame += HandleAction;
         Player.OnDeath -= HandlePlayerDeath;
+        InAppPurchaseManager.OnRemoveAds -= HandleRemoveAds;
     }
 
     void Start()
@@ -88,6 +92,11 @@ public class BannerAd : MonoBehaviour
         // Optionally execute additional code, such as attempting to load another ad.
     }
 
+    private void HandleRemoveAds()
+    {
+        removeAds = true;
+    }
+
     private void HandleAction()
     {
         ShowBannerAd(false);
@@ -115,7 +124,7 @@ public class BannerAd : MonoBehaviour
         };
 
         // Show the loaded Banner Ad Unit:
-        if (isPaused)
+        if (isPaused || removeAds)
         {
             Advertisement.Banner.Hide();
         }

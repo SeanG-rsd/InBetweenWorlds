@@ -13,11 +13,13 @@ public class InterstitialAd : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsSho
     private int currentDeaths;
 
     private string CURRENT_ADS = "CURRENT_ADS_KEY";
+    private bool removeAds = false;
 
     private void Awake()
     {
         currentDeaths = PlayerPrefs.GetInt(CURRENT_ADS);
         RewardedAd.OnLeaveContinueScreen += HandleDeath;
+        InAppPurchaseManager.OnRemoveAds += HandleRemoveAds;
         // Get the Ad Unit ID for the current platform:
         _adUnitId = (Application.platform == RuntimePlatform.IPhonePlayer)
             ? _iOsAdUnitId
@@ -26,7 +28,8 @@ public class InterstitialAd : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsSho
 
     private void OnDestroy()
     {
-        RewardedAd.OnLeaveContinueScreen -= HandleDeath;        
+        RewardedAd.OnLeaveContinueScreen -= HandleDeath;     
+        InAppPurchaseManager.OnRemoveAds -= HandleRemoveAds;
     }
 
     private void HandleDeath()
@@ -37,6 +40,12 @@ public class InterstitialAd : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsSho
         {
             ShowAd();
         }
+    }
+
+
+    private void HandleRemoveAds()
+    {
+        removeAds = true;
     }
 
     // Load content to the Ad Unit:
@@ -50,10 +59,13 @@ public class InterstitialAd : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsSho
     // Show the loaded content in the Ad Unit:
     public void ShowAd()
     {
-        // Note that if the ad content wasn't previously loaded, this method will fail
-        currentDeaths = 0;
-        PlayerPrefs.SetInt(CURRENT_ADS, currentDeaths);
-        Advertisement.Show(_adUnitId, this);
+        if (!removeAds)
+        {
+            // Note that if the ad content wasn't previously loaded, this method will fail
+            currentDeaths = 0;
+            PlayerPrefs.SetInt(CURRENT_ADS, currentDeaths);
+            Advertisement.Show(_adUnitId, this);
+        }
     }
 
     // Implement Load Listener and Show Listener interface methods: 
