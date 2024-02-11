@@ -51,8 +51,7 @@ namespace Unity.Advertisement.IosSupport.Samples
                 yield return null;
             }
 #endif
-            Debug.Log("loaded tutorial");
-            SceneManager.LoadScene("SampleScene");
+            SceneManager.LoadScene("Game");
             yield return null;
         }
     }   
