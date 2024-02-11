@@ -17,7 +17,7 @@ public class InAppPurchaseManager : MonoBehaviour
     {
         if (PlayerPrefs.GetInt(PURCHASE_KEY) == 1)
         {
-            RemoveAds();
+            //RemoveAds();
         }
     }
     public void OnBuyRemoveAds()
